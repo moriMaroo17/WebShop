@@ -2,6 +2,9 @@ import express from 'express'
 import { fileURLToPath } from 'url';
 import path from 'path'
 import exphbs from 'express-handlebars'
+import { homeRoutes } from './routes/home.js';
+import { coursesRoutes } from './routes/courses.js'
+import { addRoutes } from './routes/add.js'
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,27 +22,12 @@ app.set('view engine', 'hbs')
 app.set('views', 'views')
 
 app.use(express.static('public'))
+app.use(express.urlencoded({extended: true}))
+app.use('/', homeRoutes)
+app.use('/courses', coursesRoutes)
+app.use('/add', addRoutes)
 
-app.get('/', (req, res) => {
-    res.render('index', {
-        'title': 'Главная страница',
-        'isHome': true
-    })
-})
 
-app.get('/courses', (req, res) => {
-    res.render('courses', {
-        'title': 'Курсы',
-        'isCourses': true
-    })
-})
-
-app.get('/add', (req, res) => {
-    res.render('add', {
-        'title': 'Добавить курс',
-        'isAdd': true
-    })
-})
 
 
 
