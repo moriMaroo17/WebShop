@@ -5,6 +5,7 @@ import exphbs from 'express-handlebars'
 import { homeRoutes } from './routes/home.js';
 import { coursesRoutes } from './routes/courses.js'
 import { addRoutes } from './routes/add.js'
+import { cardRoutes } from './routes/card.js'
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,6 +27,7 @@ app.use(express.urlencoded({extended: true}))
 app.use('/', homeRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/add', addRoutes)
+app.use('/card', cardRoutes)
 
 
 
