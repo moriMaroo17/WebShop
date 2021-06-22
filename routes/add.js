@@ -1,4 +1,5 @@
 import { Router } from "express"
+import {Course} from "../models/course.js"
 
 
 const router = Router()
@@ -10,8 +11,10 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/', (req, res) => {
-    console.log(req.body)
+router.post('/', async (req, res) => {
+    const course = new Course(req.body.title, req.body.price, req.body.image)
+
+    await course.save()
 
     res.redirect('/courses')
 })
