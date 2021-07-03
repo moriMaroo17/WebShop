@@ -29,8 +29,8 @@ app.use('/courses', coursesRoutes)
 app.use('/add', addRoutes)
 app.use('/card', cardRoutes)
 
-
-
+dbName = ''
+url = `mongodb://localhost:27017/${dbName}`
 
 
 const PORT = process.env.PORT || 3000
