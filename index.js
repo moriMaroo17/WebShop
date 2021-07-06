@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url';
 import path from 'path'
 import mongose from 'mongoose'
 import exphbs from 'express-handlebars'
+import Handlebars from 'handlebars'
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access'
 import { homeRoutes } from './routes/home.js';
 import { coursesRoutes } from './routes/courses.js'
 import { addRoutes } from './routes/add.js'
@@ -16,7 +18,8 @@ const app = express()
 
 const hbs = exphbs.create({
     defaultLayout: 'main',
-    extname: 'hbs'
+    extname: 'hbs',
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
 })
 
 app.engine('hbs', hbs.engine)
@@ -38,7 +41,7 @@ async function start() {
     try {
         const dbName = 'shop'
         const url = `mongodb://localhost:27017/${dbName}`
-        await mongose.connect(url, {useNewUrlParser: true})
+        await mongose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)
