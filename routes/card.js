@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { Card } from "../models/card.js"
 import { Course } from "../models/course.js"
+// const { Course } = require('../models/course').default 
 
 const router = Router()
 

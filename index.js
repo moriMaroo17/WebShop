@@ -1,6 +1,7 @@
 import express from 'express'
 import { fileURLToPath } from 'url';
 import path from 'path'
+import mongose from 'mongoose'
 import exphbs from 'express-handlebars'
 import { homeRoutes } from './routes/home.js';
 import { coursesRoutes } from './routes/courses.js'
@@ -29,12 +30,24 @@ app.use('/courses', coursesRoutes)
 app.use('/add', addRoutes)
 app.use('/card', cardRoutes)
 
-dbName = ''
-url = `mongodb://localhost:27017/${dbName}`
 
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
-})
+async function start() {
+    try {
+        const dbName = 'shop'
+        const url = `mongodb://localhost:27017/${dbName}`
+        await mongose.connect(url, {useNewUrlParser: true})
+
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+    
+}
+
+start()
+
