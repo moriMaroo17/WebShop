@@ -9,6 +9,7 @@ import { homeRoutes } from './routes/home.js';
 import { coursesRoutes } from './routes/courses.js'
 import { addRoutes } from './routes/add.js'
 import { cardRoutes } from './routes/card.js'
+import { User } from './models/user.js'
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +26,16 @@ const hbs = exphbs.create({
 app.engine('hbs', hbs.engine)
 app.set('view engine', 'hbs')
 app.set('views', 'views')
+
+app.use(async (req, res, next) => {
+    try {
+        const user = await User.findById('60e5c32691f7a108a4a5a4bf')
+        req.user = user
+        next()
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
@@ -46,6 +57,16 @@ async function start() {
             useUnifiedTopology: true,
             useFindAndModify: false
         })
+
+        const candidate = await User.findOne()
+        if (!candidate) {
+            const user = new User({
+                email: 'user@gmail.com',
+                name: 'SimpleUser',
+                cart: {items: []}
+            })
+            await user.save()
+        }
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)
