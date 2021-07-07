@@ -27,7 +27,7 @@ app.set('view engine', 'hbs')
 app.set('views', 'views')
 
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use('/', homeRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/add', addRoutes)
@@ -41,7 +41,11 @@ async function start() {
     try {
         const dbName = 'shop'
         const url = `mongodb://localhost:27017/${dbName}`
-        await mongose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+        await mongose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false
+        })
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)
@@ -49,7 +53,7 @@ async function start() {
     } catch (error) {
         console.log(error)
     }
-    
+
 }
 
 start()
