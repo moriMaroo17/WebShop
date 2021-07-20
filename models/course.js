@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 // import { Schema, model } from 'mongoose'
 
-const course = new mongoose.Schema({
+const courseSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -17,6 +17,15 @@ const course = new mongoose.Schema({
     }
 })
 
+courseSchema.method('toClient', function() {
+    const course = this.toObject()
+
+    course.id = course._id
+    delete course._id
+    
+    return course.id
+})
+
 // module.exports = model('Course', course)
-const Course = mongoose.model('Course', course)
+const Course = mongoose.model('Course', courseSchema)
 export { Course }
