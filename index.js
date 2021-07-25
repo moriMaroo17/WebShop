@@ -9,6 +9,7 @@ import { homeRoutes } from './routes/home.js';
 import { coursesRoutes } from './routes/courses.js'
 import { addRoutes } from './routes/add.js'
 import { cardRoutes } from './routes/card.js'
+import { ordersRoutes} from './routes/orders.js'
 import { User } from './models/user.js'
 
 
@@ -43,6 +44,7 @@ app.use('/', homeRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/add', addRoutes)
 app.use('/card', cardRoutes)
+app.use('/orders', ordersRoutes)
 
 
 
