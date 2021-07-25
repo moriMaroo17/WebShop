@@ -10,6 +10,7 @@ import { coursesRoutes } from './routes/courses.js'
 import { addRoutes } from './routes/add.js'
 import { cardRoutes } from './routes/card.js'
 import { ordersRoutes} from './routes/orders.js'
+import { authRoutes } from './routes/auth.js'
 import { User } from './models/user.js'
 
 
@@ -45,6 +46,7 @@ app.use('/courses', coursesRoutes)
 app.use('/add', addRoutes)
 app.use('/card', cardRoutes)
 app.use('/orders', ordersRoutes)
+app.use('/auth', authRoutes)
 
 
 
@@ -52,8 +54,9 @@ const PORT = process.env.PORT || 3000
 
 async function start() {
     try {
-        const dbName = 'shop'
-        const url = `mongodb://localhost:27017/${dbName}`
+        const dbName = 'webShop'
+        const password = 'admin'
+        const url = `mongodb+srv://admin:${password}@cluster0.5rkxc.mongodb.net/${dbName}?retryWrites=true&w=majority`
         await mongose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
