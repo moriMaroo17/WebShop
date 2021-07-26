@@ -1,5 +1,5 @@
 import { Router } from "express"
-import {Course} from "../models/course.js"
+import Course from "../models/course.js"
 // const Course = require('../models/course').default
 
 

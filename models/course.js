@@ -27,5 +27,4 @@ courseSchema.method('toClient', function() {
 })
 
 // module.exports = model('Course', course)
-const Course = mongoose.model('Course', courseSchema)
-export { Course }
+export default mongoose.model('Course', courseSchema)
