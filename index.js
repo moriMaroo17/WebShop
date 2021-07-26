@@ -6,16 +6,19 @@ import exphbs from 'express-handlebars'
 import Handlebars from 'handlebars'
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access'
 import session from 'express-session';
+import ConnectMongoDBSession from 'connect-mongodb-session'
+const MongoStore = ConnectMongoDBSession(session)
 
 import { homeRoutes } from './routes/home.js';
 import { coursesRoutes } from './routes/courses.js'
 import { addRoutes } from './routes/add.js'
 import { cardRoutes } from './routes/card.js'
-import { ordersRoutes} from './routes/orders.js'
+import { ordersRoutes } from './routes/orders.js'
 import { authRoutes } from './routes/auth.js'
 import User from './models/user.js'
 import varMiddleware from './middleware/variables.js'
 
+const MONGODB_URI = 'mongodb+srv://admin:admin@cluster0.5rkxc.mongodb.net/webShop?retryWrites=true&w=majority'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +31,11 @@ const hbs = exphbs.create({
     handlebars: allowInsecurePrototypeAccess(Handlebars)
 })
 
+const store = new MongoStore({
+    collection: 'sessions',
+    uri: MONGODB_URI
+})
+
 app.engine('hbs', hbs.engine)
 app.set('view engine', 'hbs')
 app.set('views', 'views')
@@ -37,7 +45,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(session({
     secret: 'some secret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store
 }))
 app.use(varMiddleware)
 
@@ -54,24 +63,11 @@ const PORT = process.env.PORT || 3000
 
 async function start() {
     try {
-        const dbName = 'webShop'
-        const password = 'admin'
-        const url = `mongodb+srv://admin:${password}@cluster0.5rkxc.mongodb.net/${dbName}?retryWrites=true&w=majority`
-        await mongose.connect(url, {
+        await mongose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
         })
-
-        // const candidate = await User.findOne()
-        // if (!candidate) {
-        //     const user = new User({
-        //         email: 'user@gmail.com',
-        //         name: 'SimpleUser',
-        //         cart: {items: []}
-        //     })
-        //     await user.save()
-        // }
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)

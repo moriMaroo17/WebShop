@@ -1,18 +1,18 @@
 import { Router } from "express"
 import Course from "../models/course.js"
-// const Course = require('../models/course').default
+import auth from '../middleware/auth.js'
 
 
 const router = Router()
 
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
     res.render('add', {
         'title': 'Добавить курс',
         'isAdd': true
     })
 })
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const course = new Course({
         title: req.body.title,
         price: req.body.price,
