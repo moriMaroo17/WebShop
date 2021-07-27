@@ -5,7 +5,7 @@ import mongose from 'mongoose'
 import exphbs from 'express-handlebars'
 import Handlebars from 'handlebars'
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access'
-import session from 'express-session';
+import session from 'express-session'
 import ConnectMongoDBSession from 'connect-mongodb-session'
 const MongoStore = ConnectMongoDBSession(session)
 

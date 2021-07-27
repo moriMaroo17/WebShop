@@ -1,4 +1,5 @@
 import { Router } from "express"
+import bcrypt from 'bcryptjs'
 import User from '../models/user.js'
 
 
@@ -18,15 +19,51 @@ router.get('/logout', (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    const user = await User.findById('60e5c32691f7a108a4a5a4bf')
-    req.session.user = user
-    req.session.isAuthenticated = true
-    req.session.save(err => {
-        if (err) {
-            throw err
+    try {
+        const {email, password} = req.body
+        const candidate = await User.findOne({ email })
+
+        if (candidate) {
+            const areSame = await bcrypt.compare(password, candidate.password)
+
+            if (areSame) {
+                req.session.user = candidate
+                req.session.isAuthenticated = true
+                req.session.save(err => {
+                    if (err) {
+                        throw err
+                    }
+                    res.redirect('/')
+                })
+            } else {
+                res.redirect('/auth/login#login')
+            }
+        } else {
+            res.redirect('/auth/login#login')
         }
-        res.redirect('/')
-    })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.post('/register', async (req, res) => {
+    try {
+        const {email, password, repeat, name} = req.body
+        const candidate =  await User.findOne({ email })
+
+        if (candidate) {
+            res.redirect('/auth/login#register')
+        } else {
+            const hashPassword = await bcrypt.hash(password, 10)
+            const user = new User({
+                email, name, password: hashPassword, cart: {items: []}
+            })
+            await user.save()
+            res.redirect('/auth/login#login')
+        }
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 export {router as authRoutes}
