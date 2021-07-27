@@ -1,6 +1,7 @@
 import express from 'express'
 import { fileURLToPath } from 'url';
 import path from 'path'
+import csrf from 'csurf'
 import mongose from 'mongoose'
 import exphbs from 'express-handlebars'
 import Handlebars from 'handlebars'
@@ -48,6 +49,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+app.use(csrf())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
