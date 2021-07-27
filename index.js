@@ -15,8 +15,8 @@ import { addRoutes } from './routes/add.js'
 import { cardRoutes } from './routes/card.js'
 import { ordersRoutes } from './routes/orders.js'
 import { authRoutes } from './routes/auth.js'
-import User from './models/user.js'
 import varMiddleware from './middleware/variables.js'
+import userMiddleware from './middleware/user.js'
 
 const MONGODB_URI = 'mongodb+srv://admin:admin@cluster0.5rkxc.mongodb.net/webShop?retryWrites=true&w=majority'
 
@@ -49,6 +49,7 @@ app.use(session({
     store
 }))
 app.use(varMiddleware)
+app.use(userMiddleware)
 
 app.use('/', homeRoutes)
 app.use('/courses', coursesRoutes)
