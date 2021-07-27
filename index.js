@@ -2,6 +2,7 @@ import express from 'express'
 import { fileURLToPath } from 'url';
 import path from 'path'
 import csrf from 'csurf'
+import flash from 'connect-flash'
 import mongose from 'mongoose'
 import exphbs from 'express-handlebars'
 import Handlebars from 'handlebars'
@@ -50,6 +51,7 @@ app.use(session({
     store
 }))
 app.use(csrf())
+app.use(flash())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
