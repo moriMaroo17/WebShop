@@ -1,9 +1,17 @@
 import { Router } from "express"
 import bcrypt from 'bcryptjs'
+import nodemailer from 'nodemailer'
+import sendgrid from 'nodemailer-sendgrid-transport'
+import keys from '../keys/index.js'
 import User from '../models/user.js'
+import regEmail from '../emails/registration.js'
 
 
 const router = Router()
+
+const transporter = nodemailer.createTransport(sendgrid({
+    auth: {api_key: keys.SENDGRID_API_KEY}
+}))
 
 router.get('/login', (req, res) => {
     res.render('auth/login', {
@@ -64,6 +72,8 @@ router.post('/register', async (req, res) => {
                 email, name, password: hashPassword, cart: {items: []}
             })
             await user.save()
+            
+            await transporter.sendMail(regEmail(email))
             res.redirect('/auth/login#login')
         }
     } catch (error) {
