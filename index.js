@@ -19,8 +19,9 @@ import { ordersRoutes } from './routes/orders.js'
 import { authRoutes } from './routes/auth.js'
 import varMiddleware from './middleware/variables.js'
 import userMiddleware from './middleware/user.js'
+import keys from './keys/index.js'
 
-const MONGODB_URI = 'mongodb+srv://admin:admin@cluster0.5rkxc.mongodb.net/webShop?retryWrites=true&w=majority'
+const PORT = process.env.PORT || 3000
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +36,7 @@ const hbs = exphbs.create({
 
 const store = new MongoStore({
     collection: 'sessions',
-    uri: MONGODB_URI
+    uri: keys.MONGODB_URI
 })
 
 app.engine('hbs', hbs.engine)
@@ -45,7 +46,7 @@ app.set('views', 'views')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
-    secret: 'some secret',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store
@@ -64,11 +65,11 @@ app.use('/auth', authRoutes)
 
 
 
-const PORT = process.env.PORT || 3000
+
 
 async function start() {
     try {
-        await mongose.connect(MONGODB_URI, {
+        await mongose.connect(keys.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
