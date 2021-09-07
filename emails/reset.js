@@ -1,6 +1,6 @@
 import keys from '../keys/index.js'
 
-export default (email) => {
+export default (email, token) => {
     return {
         to: email,
         from: keys.EMAIL_FROM,

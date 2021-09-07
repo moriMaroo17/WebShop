@@ -102,13 +102,13 @@ router.post('/reset', (req, res) => {
             const candidate = await User.findOne({email: req.body.email})
 
             if (candidate) {
-                candidate.resetToken = token,
+                candidate.resetToken = token
                 candidate.resetTokenExp = Date.now() + 60 * 60 * 1000
                 await candidate.save()
                 await transporter.sendMail(resetEmail(candidate.email, token))
                 res.redirect('/auth/login')
             } else {
-                req.flash({'error': 'Такого email нет'})
+                req.flash('error', 'Такого email нет')
                 res.redirect('/auth/reset')
             }
         })
