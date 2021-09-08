@@ -19,6 +19,7 @@ import { ordersRoutes } from './routes/orders.js'
 import { authRoutes } from './routes/auth.js'
 import varMiddleware from './middleware/variables.js'
 import userMiddleware from './middleware/user.js'
+import ifeq from './utils/hbs-helpers.js'
 import keys from './keys/index.js'
 
 const PORT = process.env.PORT || 3000
@@ -31,7 +32,8 @@ const app = express()
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs',
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers: ifeq
 })
 
 const store = new MongoStore({
