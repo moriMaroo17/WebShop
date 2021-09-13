@@ -1,4 +1,9 @@
-import keys from '../keys/index.js'
+import { createRequire } from "module"
+
+const require = createRequire(import.meta.url)
+
+const keys = require('../keys')
+
 
 export default (email, token) => {
     return {

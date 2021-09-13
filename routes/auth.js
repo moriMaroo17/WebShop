@@ -3,10 +3,16 @@ import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import sendgrid from 'nodemailer-sendgrid-transport'
 import crypto from 'crypto'
-import keys from '../keys/index.js'
+import { validationResult } from 'express-validator/check/index.js'
 import User from '../models/user.js'
 import regEmail from '../emails/registration.js'
 import resetEmail from '../emails/reset.js'
+import { registerValidators } from '../utils/validators.js'
+import { createRequire } from "module"
+
+const require = createRequire(import.meta.url)
+
+const keys = require('../keys')
 
 
 const router = Router()
@@ -60,24 +66,24 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerValidators, async (req, res) => {
     try {
-        const {email, password, repeat, name} = req.body
-        const candidate =  await User.findOne({ email })
+        const {email, password, name} = req.body
 
-        if (candidate) {
-            req.flash('registerError', 'Пользователь с таким email уже существует')
-            res.redirect('/auth/login#register')
-        } else {
-            const hashPassword = await bcrypt.hash(password, 10)
-            const user = new User({
-                email, name, password: hashPassword, cart: {items: []}
-            })
-            await user.save()
-            
-            await transporter.sendMail(regEmail(email))
-            res.redirect('/auth/login#login')
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            req.flash('registerError', errors.array()[0].msg)
+            return res.status(422).redirect('/auth/login#register')
         }
+
+        const hashPassword = await bcrypt.hash(password, 10)
+        const user = new User({
+            email, name, password: hashPassword, cart: {items: []}
+        })
+        await user.save()
+        
+        await transporter.sendMail(regEmail(email))
+        res.redirect('/auth/login#login')
     } catch (error) {
         console.log(error)
     }

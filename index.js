@@ -20,7 +20,12 @@ import { authRoutes } from './routes/auth.js'
 import varMiddleware from './middleware/variables.js'
 import userMiddleware from './middleware/user.js'
 import ifeq from './utils/hbs-helpers.js'
-import keys from './keys/index.js'
+// import keys from './keys/index.js'
+import { createRequire } from "module"
+
+const require = createRequire(import.meta.url)
+
+const keys = require('./keys')
 
 const PORT = process.env.PORT || 3000
 

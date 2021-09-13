@@ -1,0 +1,7 @@
+{
+    "MONGODB_URI": "mongodb+srv://admin:admin@cluster0.5rkxc.mongodb.net/webShop?retryWrites=true&w=majority",
+    "SESSION_SECRET": "some secret value",
+    "SENDGRID_API_KEY": "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",
+    "EMAIL_FROM": "dibecit918@fada55.com",
+    "BASE_URL": "http://localhost:3000"
+}
