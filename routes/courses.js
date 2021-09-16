@@ -1,5 +1,7 @@
-import { Router } from "express"
-import Course from "../models/course.js"
+import { Router } from 'express'
+import { courseValidators } from '../utils/validators.js'
+import { validationResult } from 'express-validator'
+import Course from '../models/course.js'
 import auth from '../middleware/auth.js'
 
 
@@ -49,7 +51,15 @@ router.get('/:id/edit', auth, async (req, res) => {
     
 })
 
-router.post('/edit', auth, async (req, res) => {
+router.post('/edit', auth, courseValidators, async (req, res) => {
+
+    const errors = validationResult(req)
+    const {id} = req.body
+
+    if (!errors.isEmpty()) {
+        return res.status(422).redirect(`/courses/${id}/edit?allow=true`)
+    }
+
     try {
         const {id} = req.body
         delete req.body.id

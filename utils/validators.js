@@ -1,4 +1,5 @@
-import { body } from 'express-validator/check/index.js'
+import bcrypt from 'bcryptjs'
+import { body } from 'express-validator'
 import User from '../models/user.js'
 
 const registerValidators = [
@@ -31,4 +32,44 @@ const registerValidators = [
         .trim()
 ]
 
-export { registerValidators }
+const loginValidators = [
+    body('email')
+        .custom(async (value, {req}) => {
+            try {
+                const user = await User.findOne({ email: value })
+                if (!user) {
+                    return Promise.reject('Такого пользователя не существует')
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        })
+        .normalizeEmail(),
+    body('password')
+        .trim()
+        .custom(async (value, {req}) => {
+            try {
+                const user = await User.findOne({ email: req.body.email })
+                if (user) {
+                    const areSame = await bcrypt.compare(value, user.password)
+                    if (!areSame) {
+                        return Promise.reject('Неверный пароль')
+                    }
+                }            
+            } catch (error) {
+                console.log(error)
+            }
+        })
+]
+
+const courseValidators = [
+    body('title')
+        .isLength({min: 3}).withMessage('Минимальная длина названия 3 символа')
+        .trim(),
+    body('price')
+        .isNumeric().withMessage('Введите корректную цену'),
+    body('img')
+        .isURL().withMessage('Введите корректный Url картинки')
+]
+
+export { registerValidators, loginValidators, courseValidators } 
