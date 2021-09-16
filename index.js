@@ -19,6 +19,7 @@ import { ordersRoutes } from './routes/orders.js'
 import { authRoutes } from './routes/auth.js'
 import varMiddleware from './middleware/variables.js'
 import userMiddleware from './middleware/user.js'
+import errorHandler from './middleware/error.js'
 import ifeq from './utils/hbs-helpers.js'
 // import keys from './keys/index.js'
 import { createRequire } from "module"
@@ -70,7 +71,7 @@ app.use('/card', cardRoutes)
 app.use('/orders', ordersRoutes)
 app.use('/auth', authRoutes)
 
-
+app.use(errorHandler)
 
 
 
