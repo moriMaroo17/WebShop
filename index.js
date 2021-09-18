@@ -21,6 +21,7 @@ import { profileRoutes } from './routes/profile.js'
 import varMiddleware from './middleware/variables.js'
 import userMiddleware from './middleware/user.js'
 import errorHandler from './middleware/error.js'
+import fileMiddleware from './middleware/file.js'
 import ifeq from './utils/hbs-helpers.js'
 // import keys from './keys/index.js'
 import { createRequire } from "module"
@@ -53,6 +54,7 @@ app.set('view engine', 'hbs')
 app.set('views', 'views')
 
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
     secret: keys.SESSION_SECRET,
@@ -60,6 +62,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+app.use(fileMiddleware.single('avatar'))
 app.use(csrf())
 app.use(flash())
 app.use(varMiddleware)
