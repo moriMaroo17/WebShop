@@ -17,6 +17,7 @@ import { addRoutes } from './routes/add.js'
 import { cardRoutes } from './routes/card.js'
 import { ordersRoutes } from './routes/orders.js'
 import { authRoutes } from './routes/auth.js'
+import { profileRoutes } from './routes/profile.js'
 import varMiddleware from './middleware/variables.js'
 import userMiddleware from './middleware/user.js'
 import errorHandler from './middleware/error.js'
@@ -70,6 +71,7 @@ app.use('/add', addRoutes)
 app.use('/card', cardRoutes)
 app.use('/orders', ordersRoutes)
 app.use('/auth', authRoutes)
+app.use('/profile', profileRoutes)
 
 app.use(errorHandler)
 
